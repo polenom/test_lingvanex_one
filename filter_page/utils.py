@@ -9,6 +9,8 @@ import urllib
 
 from aiohttp import ClientSession, ClientConnectorError
 
+from main import settings
+
 
 class ParcerApps:
     url = 'https://apps.microsoft.com/store/category/Business'
@@ -81,7 +83,6 @@ class ParcerApps:
             await asyncio.gather(*tasks)
             count += len(products_ids)
 
-
     def _get_email(self, text: str) -> str | None:
         index_email = text.rfind('email')
         if index_email >= 0:
@@ -102,3 +103,50 @@ class ParcerApps:
             'email': email
         }
 
+
+class ValueFilter:
+    def __init__(self, request, queryset):
+        self._request = request
+        self.queryset = queryset
+        save_value = self._request.session.get(settings.SAVE_FILTER)
+        if not save_value:
+            merge_value = self._merge_dicts(self._request.GET, self._default_value())
+            save_value = self._request.session[settings.SAVE_FILTER] = merge_value
+        else:
+            save_value = self._merge_dicts(self._request.GET, save_value)
+            print(save_value ,12312313123)
+        self._save_value = save_value
+
+    def save(self):
+        self._request.session[settings.SAVE_FILTER] = self._save_value
+        self._request.session.modified = True
+
+    def _merge_dicts(self, dict_one, dict_two):
+        sort_key = list(filter(lambda e: e.startswith('sort__'), dict_one.keys()))
+        default = 0
+        if dict_two.get('sort'):
+            default = abs(dict_two['sort'][1] - 1)
+            del dict_two['sort']
+        if sort_key:
+            name = sort_key[0][6:]
+            dict_one = dict_one.copy()
+            dict_one['sort'] = [name, default]
+            del dict_one[sort_key[0]]
+
+        return {**dict_two, **dict_one}
+
+    def _default_value(self):
+        return {'sort': [None, 0]}
+
+    def sorted(self):
+        if self._save_value.get('sort'):
+            print(self)
+            order = ('-' if self._save_value['sort'][1] else '') + self._save_value['sort'][0]
+            self.queryset.order_by(order)
+        self.save()
+        return self.queryset
+
+    def get_value(self):
+        print(self._save_value)
+        self.save()
+        return self._save_value

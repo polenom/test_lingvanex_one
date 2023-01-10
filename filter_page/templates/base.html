@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apps</title>
+    <style>
+      h1 {color:red;}
+      .block_div {
+        display:flex;
+        justify-content: space-around;
+      }
+    </style>
+</head>
+<body>
+    {% include 'searchform.html' %}
+    {% block search %}
+    {% endblock %}
+    {% include 'table.html' %}
+    {% block one %}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,24 @@
+
+{% block one %}
+    <div class="block_div">
+        <div>
+            <form method="get">
+                <input type="submit" value="sort" name="sort__name_app">
+            </form>
+        </div>
+        <div> company </div>
+        <div> email </div>
+        <div> date </div>
+    </div>
+    {% for app in object_list %}
+    <div class="block_div">
+        <div> {{app.name_app}} </div>
+        <div> {{app.company}} </div>
+        <div> {{app.release}} </div>
+        <div> {{app.email}} </div>
+    </div>
+    {% endfor %}
+    {% include 'paginator.html' %}
+    {% block pagi %}
+    {% endblock %}
+{% endblock %}

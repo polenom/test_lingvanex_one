@@ -1,0 +1,28 @@
+
+{% block search  %}
+
+<form method="get">
+    <p>
+        <label for="id_name_app">Name app contains:</label>
+        <input type="text" name="name_app" id="id_name_app">
+    </p>
+    <p>
+        <label for="id_company">Company contains:</label>
+        <input type="text" name="company" id="id_company">
+    </p>
+    <p>
+        <label for="id_email">Email email:</label>
+        <input type="text" name="email" id="id_email">
+    </p>
+    <p>
+        <label for="id_release__gt">Release year is greater than or equal to:</label>
+        <input type="number" name="release__gt" step="any" id="id_release__gt">
+    </p>
+    <p>
+        <label for="id_release__lt">Release year is less than or equal to:</label>
+        <input type="number" name="release__lt" step="any" id="id_release__lt">
+    </p>
+    <input type="submit">
+</form>
+
+{% endblock %}
