@@ -11,6 +11,7 @@ class Filter(ListView):
     template_name = 'base.html'
     paginate_by = 10
     filters = None
+
     def get_queryset(self):
         filters = ValueFilter(self.request, queryset=App.objects.all())
         queryset = filters.sorted()
@@ -21,3 +22,7 @@ class Filter(ListView):
         context =  super().get_context_data( *args, **kwargs)
         # context['filter_form'] = AppFilter(self.request.GET)
         return context
+
+    def get_ordering(self):
+        print('ORDERING')
+        return "-name_app"

@@ -1,24 +1,44 @@
-
 {% block one %}
-    <div class="block_div">
-        <div>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">
             <form method="get">
-                <input type="submit" value="sort" name="sort__name_app">
+                <button type="submit" class="btn btn-outline-secondary" name="sort__name_app">Name</button>
             </form>
-        </div>
-        <div> company </div>
-        <div> email </div>
-        <div> date </div>
-    </div>
+        </th>
+        <th scope="col">
+            <form method="get">
+                <button type="submit" class="btn btn-outline-secondary" name="sort__company">Company</button>
+            </form>
+        </th>
+        <th scope="col">
+            <form method="get">
+                <button type="submit" class="btn btn-outline-secondary" name="sort__email">Email</button>
+            </form>
+        </th>
+        <th scope="col">
+            <form method="get">
+                <button type="submit" class="btn btn-outline-secondary" name="sort__release">Release</button>
+            </form>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
     {% for app in object_list %}
-    <div class="block_div">
-        <div> {{app.name_app}} </div>
-        <div> {{app.company}} </div>
-        <div> {{app.release}} </div>
-        <div> {{app.email}} </div>
-    </div>
+    <tr>
+        <th scope="row">{{app.name_app}}</th>
+        <td>{{app.company}}</td>
+        <td>{{app.email}}</td>
+        <td>{{app.release}}</td>
+    </tr>
     {% endfor %}
-    {% include 'paginator.html' %}
-    {% block pagi %}
-    {% endblock %}
+    </tbody>
+</table>
+{% include 'paginator.html' %}
+{% block pagi %}
 {% endblock %}
+{% endblock %}
+
+
+

@@ -110,11 +110,10 @@ class ValueFilter:
         self.queryset = queryset
         save_value = self._request.session.get(settings.SAVE_FILTER)
         if not save_value:
-            merge_value = self._merge_dicts(self._request.GET, self._default_value())
+            merge_value = {**self._request.GET, 'sort': [None, 0]}
             save_value = self._request.session[settings.SAVE_FILTER] = merge_value
         else:
             save_value = self._merge_dicts(self._request.GET, save_value)
-            print(save_value ,12312313123)
         self._save_value = save_value
 
     def save(self):
@@ -123,30 +122,28 @@ class ValueFilter:
 
     def _merge_dicts(self, dict_one, dict_two):
         sort_key = list(filter(lambda e: e.startswith('sort__'), dict_one.keys()))
-        default = 0
+        prev_value = None
+        dict_o = dict_one.dict()
         if dict_two.get('sort'):
-            default = abs(dict_two['sort'][1] - 1)
-            del dict_two['sort']
+            prev_value = dict_two['sort']
+            dict_two['sort'] = [None, 0]
         if sort_key:
             name = sort_key[0][6:]
-            dict_one = dict_one.copy()
-            dict_one['sort'] = [name, default]
-            del dict_one[sort_key[0]]
-
-        return {**dict_two, **dict_one}
-
-    def _default_value(self):
-        return {'sort': [None, 0]}
+            dict_o['sort'] = [name, 0]
+            if prev_value and dict_o['sort'][0] == prev_value[0]:
+                dict_o['sort'][1] = abs(prev_value[1] - 1)
+            del dict_o[sort_key[0]]
+        return {**dict_two, **dict_o}
 
     def sorted(self):
-        if self._save_value.get('sort'):
-            print(self)
-            order = ('-' if self._save_value['sort'][1] else '') + self._save_value['sort'][0]
-            self.queryset.order_by(order)
         self.save()
+        if self._save_value.get('sort') and self._save_value.get('sort')[0]:
+            order = ('-' if self._save_value['sort'][1] else '') + self._save_value['sort'][0]
+            print(order, 'order_by')
+            return self.queryset.order_by(order)
         return self.queryset
 
     def get_value(self):
-        print(self._save_value)
+        print(self._save_value, "SAVE")
         self.save()
         return self._save_value
