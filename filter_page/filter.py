@@ -10,7 +10,5 @@ class AppFilter(django_filters.FilterSet):
     release__gt = django_filters.NumberFilter(field_name='release', lookup_expr='year__gte')
     release__lt = django_filters.NumberFilter(field_name='release', lookup_expr='year__lte')
 
-
-
     def __len__(self):
         return len(self.qs)

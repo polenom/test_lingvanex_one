@@ -9,20 +9,16 @@ from filter_page.utils import ValueFilter
 # Create your views here.
 class Filter(ListView):
     template_name = 'base.html'
-    paginate_by = 10
     filters = None
 
     def get_queryset(self):
         filters = ValueFilter(self.request, queryset=App.objects.all())
-        queryset = filters.sorted()
+        queryset = filters.get_qs()
         self.filters = filters.get_value()
-        return AppFilter(self.request.GET, queryset=queryset).qs
+        self.paginate_by = self.filters.get('page_elem')
+        return AppFilter(self.filters, queryset=queryset).qs
 
     def get_context_data(self, *args, **kwargs):
         context =  super().get_context_data( *args, **kwargs)
-        # context['filter_form'] = AppFilter(self.request.GET)
+        context['filters'] = self.filters
         return context
-
-    def get_ordering(self):
-        print('ORDERING')
-        return "-name_app"

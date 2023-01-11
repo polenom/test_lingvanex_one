@@ -8,5 +8,12 @@ services:
       POSTGRES_DB: "apps"
       POSTGRES_USER: "django"
       POSTGRES_PASSWORD: "django"
+
+  django:
+    build:
+      context: ./
     ports:
-      - "5434:5432"
+      - "8001:8001"
+    command: sh -c  " poetry run python3 manage.py makemigrations && poetry run python3 manage.py migrate && poetry run python3 manage.py init_date && poetry run python3 manage.py runserver 0.0.0.0:8001"
+    depends_on:
+      - postgres

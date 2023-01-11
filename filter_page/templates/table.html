@@ -25,16 +25,22 @@
     </tr>
     </thead>
     <tbody>
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'main' %}?page_elem=10" class=" {% if filters.page_elem == '10' %} text-info {% else %} text-secondary {% endif%} mr-3 "> 10 </a>
+        <a href="{% url 'main' %}?page_elem=20" class=" {% if filters.page_elem == '20' %} text-info {% else %} text-secondary {% endif%} mr-3"> 20 </a>
+        <a href="{% url 'main' %}?page_elem=50" class=" {% if filters.page_elem == '50' %} text-info {% else %} text-secondary {% endif%} mr-3"> 50 </a>
+    </div>
     {% for app in object_list %}
     <tr>
         <th scope="row">{{app.name_app}}</th>
         <td>{{app.company}}</td>
-        <td>{{app.email}}</td>
+        <td>{% if app.email %}{{app.email}}{% else %} - {% endif %}</td>
         <td>{{app.release}}</td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
+<div >
 {% include 'paginator.html' %}
 {% block pagi %}
 {% endblock %}
